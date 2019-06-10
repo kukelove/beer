@@ -1,0 +1,45 @@
+
+.base-table-row:hover {
+  background: yellow;
+}
+.base-table {
+  background: #fff;
+}
+.table {
+  :global {
+    .ant-table td {
+      white-space: nowrap;
+    }
+  }
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.quickJumper {
+  display: flex;
+  align-items: center;
+  border: 1px solid #000;
+  .quickJumperBox {
+    padding: 10px;
+  }
+  .quickJumperNumber {
+    .number {
+      width: 50px;
+      border: 0px;
+    }
+    input {
+      border: 0;
+      outline:none;
+      padding: 10px;
+      background: transparent;
+    }
+    
+  }
+  .quickJumperLine {
+    width: 1px;
+    height: 16px;
+    border: 1px solid;
+  }
+}
