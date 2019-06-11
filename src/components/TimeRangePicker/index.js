@@ -9,25 +9,23 @@ const format = 'HH:mm';
 export default class TimeRangePicker extends Component {
 
   state = {
-    timeRange: ['00:00', '00:00']
   }
 
   onchangeBeginHandle = (value) => {
-    this.state.timeRange[0] = value.format(format)
-    this.setState({})
-    this.props.onChange(this.state.timeRange.toString())
+    const endTime = this.props.value? this.props.value.split(',')[1]: '21:00'
+    this.props.onChange(value.format(format) + ',' + endTime)
   }
 
   onchangeEndHandle = (value) => {
-    this.state.timeRange[1] = value.format(format)
-    this.setState({})
-    this.props.onChange(this.state.timeRange.toString())
+    // this.props.onChange(this.state.timeRange.toString())
+    const startTime = this.props.value? this.props.value.split(',')[0]: '8:00'
+    this.props.onChange(startTime + ',' + value.format(format))
   }
 
   render() {
-    const startTime = this.state.timeRange[0]
-    const endTime = this.state.timeRange[1]
-
+    const data  = this.props.value? this.props.value.split(',') : ['08:00', '21:00']
+    const startTime = data[0]
+    const endTime = data[1]
 
     return (<Fragment> 
         <TimePicker  

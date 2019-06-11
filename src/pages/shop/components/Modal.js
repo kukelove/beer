@@ -41,6 +41,10 @@ class MerchantModal extends PureComponent {
     })
   }
 
+  formatCity(record) {
+    return [record.province, record.city, record.country]
+  }
+
   render() {
     const uploadProps = {
       action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
@@ -50,11 +54,11 @@ class MerchantModal extends PureComponent {
     const { getFieldDecorator } = form
     return (
       <Modal {...modalProps} footer={false} width={600} visible={true}>
-        <Row className={styles.title}>添加门店</Row>
+        <Row className={styles.title}>{item.id ? '编辑' : '添加'}</Row>
         <Form autoComplete="off" layout="horizontal">
           <FormItem hasFeedback {...formItemLayout}>
             {getFieldDecorator('name', {
-              // initialValue: '',
+              initialValue: item.name,
               rules: [
                 {
                   type: "string",
@@ -67,7 +71,7 @@ class MerchantModal extends PureComponent {
           <FormItem hasFeedback {...formItemLayout}>
          
             {getFieldDecorator('city', { 
-                initialValue: '' 
+                initialValue: this.formatCity(item),
               })(
                 <Cascader
                   style={{ width: '100%' }}
@@ -83,7 +87,7 @@ class MerchantModal extends PureComponent {
           </div>
           <FormItem hasFeedback {...formItemLayout}>
             {getFieldDecorator('address', {
-                initialValue: '',
+                initialValue: item.address,
                 rules: [
                   {
                     type: "string",
@@ -94,7 +98,7 @@ class MerchantModal extends PureComponent {
           </FormItem>
           <FormItem hasFeedback {...formItemLayout}>
             {getFieldDecorator('phoneNumber', {
-              initialValue: '',
+              initialValue: item.phoneNumber,
               rules: [
                 {
                   type: "string",
@@ -106,6 +110,7 @@ class MerchantModal extends PureComponent {
         
           <FormItem hasFeedback {...formItemLayout}>
             {getFieldDecorator('openHour', {
+              initialValue: item.openHour,
               rules: [
                 {
                   required: true,
@@ -117,16 +122,15 @@ class MerchantModal extends PureComponent {
             )}
           </FormItem>
           <FormItem {...formItemLayout}>
-            {getFieldDecorator('images', {
-              initialValue: [],
+            {getFieldDecorator('image', {
+              initialValue: item.image,
               rules: [
                 {
-                  type: "array",
                   required: true,
                 },
               ],
             })(
-              <ImageUpload></ImageUpload>
+              <ImageUpload count={1}></ImageUpload>
             )}
           </FormItem>
           <FormItem  {...formItemLayout}>
@@ -140,9 +144,9 @@ class MerchantModal extends PureComponent {
 
 MerchantModal.propTypes = {
   type: PropTypes.string,
-  item: PropTypes.object,
   onOk: PropTypes.func,
   onCancel: PropTypes.func,
+  item: PropTypes.object,
 }
 
 export default MerchantModal

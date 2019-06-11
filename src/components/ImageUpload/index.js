@@ -13,6 +13,12 @@ function getBase64(file) {
 }
 
 export default class ImagesUpload extends Component {
+
+
+  static defaultProps = { 
+    count: 3
+  }
+
   state = {
     previewVisible: false,
     previewImage: '',
@@ -43,10 +49,11 @@ export default class ImagesUpload extends Component {
     let changeValue = []
     fileList.map((item)=>{
       if(item.response && item.response.url) {
-        changeValue.push(item.response)
+        changeValue.push(item.response.url)
       }
     })
-    this.props.onChange(changeValue)
+    
+    this.props.onChange(changeValue.length>1 ? changeValue: changeValue[0])
     this.setState({ fileList })
   };
 
@@ -67,7 +74,7 @@ export default class ImagesUpload extends Component {
           onPreview={this.handlePreview}
           onChange={this.handleChange}
         >
-          {fileList.length >= 3 ? null : uploadButton}
+          {fileList.length >= this.props.count ? null : uploadButton}
         </Upload>
         <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
           <img alt="example" style={{ width: '50px' }} src={previewImage} />
@@ -78,5 +85,6 @@ export default class ImagesUpload extends Component {
 }
 ImagesUpload.propTypes = {
   onChange: PropTypes.func,
-  value: PropTypes.array,
+  value: PropTypes.any,
+  count: PropTypes.number,
 }

@@ -58,12 +58,7 @@ export default modelExtend(pageModel, {
       }
     },
     async create({ payload }, { call, put }) {
-      const data = Object.assign({}, payload)
-      data.province = payload.city[0];
-      data.city = payload.city[1];
-      data.country = payload.city[2];
-      delete data['city'];
-      const res = await services.createMerchant(data);
+      const res = await services.createMerchant(payload);
       if (res) {
         await put({ type: 'hideModal' })
       } else {
@@ -73,7 +68,18 @@ export default modelExtend(pageModel, {
 
     *delete({ payload }, { select, call, put }) { 
       yield services.deleteMerchant({id: payload})
-    }
+    },
+    
+    *update({ payload }, { select, call, put }) {
+      const id = yield select(({ merchant }) => merchant.currentItem.id)
+      const newMerchant = { ...payload, id }
+      const data = yield services.updateMerchant(newMerchant)
+      if (data.success) {
+        yield put({ type: 'hideModal' })
+      } else {
+        throw data
+      }
+    },
   },
 
   reducers: {

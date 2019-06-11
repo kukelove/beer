@@ -16,17 +16,21 @@ body {
 }
 
 :global {
-  .table-delete {
-    width: 38px;
-    height: 38px;
-    background: #000;
+  .table-option {
     display: flex;
     justify-content: center;
-    align-items: center;
-    .delete {
-      font-size: 25px;
-      color: #fff;
-      cursor: pointer;
+    .option {
+      width: 38px;
+      height: 38px;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .edit, .delete {
+        font-size: 25px;
+        color: #fff;
+        cursor: pointer;
+      }
     }
   }
   

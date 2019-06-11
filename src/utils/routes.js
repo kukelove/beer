@@ -26,7 +26,7 @@ const database = [
   },
   {
     id: '2',
-    breadcrumbParentId: '1',
+    // breadcrumbParentId: '1',
     name: 'Users',
     zh: {
       name: '用户管理'
@@ -37,19 +37,19 @@ const database = [
     icon: 'user',
     route: '/user',
   },
-  {
-    id: '7',
-    breadcrumbParentId: '1',
-    name: 'Posts',
-    zh: {
-      name: '用户管理'
-    },
-    'pt-br': {
-      name: 'Posts'
-    },
-    icon: 'shopping-cart',
-    route: '/post',
-  },
+  // {
+  //   id: '7',
+  //   breadcrumbParentId: '1',
+  //   name: 'Posts',
+  //   zh: {
+  //     name: '用户管理'
+  //   },
+  //   'pt-br': {
+  //     name: 'Posts'
+  //   },
+  //   icon: 'shopping-cart',
+  //   route: '/post',
+  // },
   
   {
     id: '21',

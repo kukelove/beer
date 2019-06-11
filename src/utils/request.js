@@ -35,7 +35,7 @@ export default function request(options) {
     message.error(e.message)
   }
 
-  if(method === 'delete') {
+  if(method === 'delete' || method === 'put') {
     url = url+'/'+ data.id
   }
 

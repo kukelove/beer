@@ -75,10 +75,16 @@ class Shop extends PureComponent {
       confirmLoading: loading.effects[`merchant/${modalType}`],
       title: modalType,
       centered: true,
-      onOk(data) {
+      onOk(payload) {
+        const data = Object.assign({}, payload)
+        data.province = payload.city[0];
+        data.city = payload.city[1];
+        data.country = payload.city[2];
         dispatch({
           type: `merchant/${modalType}`,
           payload: data,
+        }).then(() => {
+          handleRefresh()
         })
       },
       onCancel() {
@@ -92,18 +98,20 @@ class Shop extends PureComponent {
       list: list,
       loading: loading.effects['merchant/fetchList'],
       pagination,
-      // onChange(page) {
-      //   handleRefresh({
-      //     page: page.current,
-      //     pageSize: page.pageSize,
-      //   })
-      // },
+      onEditItem(record) {
+        dispatch({
+          type: 'merchant/showModal',
+          payload: {
+            currentItem: record,
+            modalType: 'update',
+          },
+        })
+      },
       onDeleteItem(id) {
         dispatch({
           type: 'merchant/delete',
           payload: id,
         }).then(() => {
-          console.log('debug: ', 'after delete')
           handleRefresh({
             pn:
               list.length === 1 && pagination.current > 1
@@ -113,10 +121,6 @@ class Shop extends PureComponent {
         })
       },
     }
-    
-    
-
-
     return (
       <Page inner>
         <Row>
