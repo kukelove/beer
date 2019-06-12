@@ -33,6 +33,7 @@ class BaseList extends PureComponent {
         title: '门店照片',
         dataIndex: 'merchantId',
         key: 'merchantId',
+        render: (text, record) => <img alt="" width="50" height="50" src={record.image}/>
         
       },
       {

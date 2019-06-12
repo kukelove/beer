@@ -27,61 +27,27 @@ class BaseList extends PureComponent {
     }
   }
 
+  
+
   render() {
-    const listColumns = [
-      {
-        title: '门店照片',
-        dataIndex: 'merchantId',
-        key: 'merchantId',
-        
-      },
-      {
-        title: '门店名称',
-        dataIndex: 'name',
-        key: 'name',
-      },
-      {
-        title: '详细地址',
-        dataIndex: 'address',
-        key: 'address',
-        render: (text, record ) => (<div>
-          {record.province}&nbsp;{record.city}&nbsp;{record.country}
-          {record.address}
-        </div>)
-      },
-      {
-        title: '联系电话',
-        dataIndex: 'phoneNumber',
-        key: 'phoneNumber',
-      },
-      {
-        title: '营业时间',
-        dataIndex: 'openHour',
-        key: 'openHour',
-      },
-      {
-        title: '纬度',
-        dataIndex: 'latitude',
-        key: 'latitude',
-        render: (text, record ) => (<div>
-          经度{record.latitude}&nbsp;纬度{record.longitude}
-        </div>)
-      }
-      ,{
-        title: '操作',
-        dataIndex: 'option',
-        key: 'option',
-        render: (text, record) => <div className="table-option">
-            <div onClick={()=>{this.handleMenuClick(record, 'delete')}} className="option">
-              <Icon className="delete" type="delete" />
-            </div>
-            &nbsp;&nbsp;
-            <div onClick={()=>{this.handleMenuClick(record, 'update')}} className="option">
-              <Icon className="edit" type="edit" />
-            </div>
-        </div>
-      }
-    ]
+    const { listColumns = [], list = []} = this.props
+
+    const options = {
+      title: '操作',
+      dataIndex: 'option',
+      key: 'option',
+      render: (text, record) => <div className="table-option">
+          <div onClick={()=>{this.handleMenuClick(record, 'delete')}} className="option">
+            <Icon className="delete" type="delete" />
+          </div>
+          &nbsp;&nbsp;
+          <div onClick={()=>{this.handleMenuClick(record, 'update')}} className="option">
+            <Icon className="edit" type="edit" />
+          </div>
+      </div>
+    }
+
+    listColumns.push(options)
 
     return (
       <div style={{textAlign:"center"}}>
@@ -93,7 +59,7 @@ class BaseList extends PureComponent {
         bordered
         scroll={{ x: 1200 }}
         columns={listColumns}
-        dataSource = {this.props.list}
+        dataSource = {list}
         simple
         rowKey={(record, index) => index}
       />
@@ -116,9 +82,10 @@ class BaseList extends PureComponent {
 }
 
 BaseList.propTypes = {
-  // columns: PropTypes.array,
+  listColumns: PropTypes.array,
   onDeleteItem: PropTypes.func,
   onEditItem: PropTypes.func,
+  list: PropTypes.array
   // location: PropTypes.object,
 }
 

@@ -13,7 +13,10 @@ class SuperTablePage extends PureComponent {
 
 
   static defaultProps = {
+    listColumns: []
   }
+
+  
 
   handleRefresh = newQuery => {
 
@@ -35,8 +38,24 @@ class SuperTablePage extends PureComponent {
   }
     
   render() {
-    const { location, addModelButtonText, filterText, } = this.props
+    const { 
+      location, 
+      addModelButtonText, 
+      filterText, 
+      listColumns,
+      modelName,
+      model,
+      EditModal,
+      dispatch} = this.props
+
     const { query } = location
+    
+    const {modalType, currentItem, modalVisible} = model
+
+    const listProps = {
+      listColumns,
+      list:model.list,
+    }
 
     const filterProps = {
       addModelButtonText,
@@ -54,6 +73,33 @@ class SuperTablePage extends PureComponent {
       onAdd() {
       },
     }
+    
+    const modalProps = {
+      item: modalType === 'create' ? {} : currentItem,
+      visible: modalVisible,
+      maskClosable: false,
+      // confirmLoading: loading.effects[`merchant/${modalType}`],
+      title: modalType,
+      centered: true,
+      onOk(payload) {
+        const data = Object.assign({}, payload)
+        data.province = payload.city[0];
+        data.city = payload.city[1];
+        data.country = payload.city[2];
+        dispatch({
+          type: `system/${modalType}`,
+          payload: data,
+        }).then(() => {
+          this.handleRefresh()
+        })
+      },
+      onCancel() {
+        dispatch({
+          type: 'system/hideModal',
+        })
+      },
+    }
+
 
     return (
       <Page inner>
@@ -64,7 +110,9 @@ class SuperTablePage extends PureComponent {
             {... filterProps}
           ></BaseFliter>
         </Row>
-        <BaseList></BaseList>
+        <br/>
+        <BaseList {...listProps}></BaseList>
+        {EditModal && <EditModal {...modalProps}></EditModal>}
       </Page>
     )
   }
@@ -75,6 +123,10 @@ SuperTablePage.propTypes = {
   addModelButtonText: PropTypes.any,
   filterText: PropTypes.any,
   onFilterChange: PropTypes.func,
+  listColumns: PropTypes.array,
+  modelName: PropTypes.string,
+  EditModal: PropTypes.any,
+  model: PropTypes.object
 }
 
 export default SuperTablePage

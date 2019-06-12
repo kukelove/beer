@@ -15,14 +15,14 @@ const database = [
   {
     id: '1',
     icon: 'dashboard',
-    name: 'Dashboard',
+    name: '系统人员管理',
     zh: {
-      name: '仪表盘'
+      name: '系统人员管理'
     },
     'pt-br': {
-      name: 'Dashboard'
+      name: '系统人员管理'
     },
-    route: '/dashboard',
+    route: '/system',
   },
   {
     id: '2',

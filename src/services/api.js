@@ -5,10 +5,10 @@ export default {
   logoutUser: '/user/logout',
   loginUser: 'POST /user/login',
 
-  queryUser: '/user/:id',
-  queryUserList: '/users',
-  updateUser: 'Patch /user/:id',
-  createUser: 'POST /user',
+  // queryUser: '/user/:id',
+  // queryUserList: '/users',
+  // updateUser: 'Patch /user/:id',
+  // createUser: 'POST /user',
   removeUser: 'DELETE /user/:id',
   removeUserList: 'POST /users/delete',
 
@@ -19,5 +19,10 @@ export default {
   queryMerchantList: '/manage/merchant',
   createMerchant: 'post /manage/merchant',
   updateMerchant: 'put /manage/merchant',
-  deleteMerchant: 'delete /manage/merchant' 
+  deleteMerchant: 'delete /manage/merchant',
+
+  queryUserList: '/manage/user',
+  createUser: 'post /manage/user',
+  updateUser: 'put /manage/user',
+  deleteUser: 'delete /manage/user' 
 }
