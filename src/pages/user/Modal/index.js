@@ -1,12 +1,13 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'dva'
-import { Form, Input, Modal, Row , Button, Checkbox, Select } from 'antd'
+import { Form, Input, Modal, Row , Button, Checkbox, Select} from 'antd'
 import { withI18n } from '@lingui/react'
 import styles from './Modal.less'
-
+import { GENDER_TYPE } from '../../../utils/constant'
 const CheckboxGroup = Checkbox.Group;
 const { Option } = Select;
+
 const FormItem = Form.Item
 
 const formItemLayout = {
@@ -33,7 +34,7 @@ class MerchantModal extends PureComponent {
       const data = {
         ...getFieldsValue(),
         id: item.id,
-        type: 3
+        type: 0
       }
       onOk(data)
       resetFields()
@@ -63,9 +64,33 @@ class MerchantModal extends PureComponent {
                   required: true,
                 },
               ],
-            })(<Input placeholder="人员姓名"/>)}
+            })(<Input placeholder="客户姓名"/>)}
           </FormItem>
-          <div id="cityCascader">
+          <FormItem hasFeedback {...formItemLayout}>
+            {getFieldDecorator('gender', {
+              initialValue: item.gender,
+              rules: [
+                {
+                  required: true,
+                },
+              ],
+            })( <Select placeholder="性别">
+            <Option key={1} value={1}>男</Option>
+            <Option key={2} value={2}>女</Option>
+            
+          </Select>)}
+          </FormItem>
+          <FormItem hasFeedback {...formItemLayout}>
+            {getFieldDecorator('birthday', {
+              initialValue: item.birthday,
+              rules: [
+                {
+                  type: "string",
+                  required: true,
+                },
+              ],
+            })(<Input placeholder="生日"/>)}
+          </FormItem>
           <FormItem hasFeedback {...formItemLayout}>
             {getFieldDecorator('phoneNumber', {
               initialValue: item.phoneNumber,
@@ -75,51 +100,41 @@ class MerchantModal extends PureComponent {
                   required: true,
                 },
               ],
-            })(<Input placeholder="联系电话"/>)}
+            })(<Input placeholder="联系方式"/>)}
           </FormItem>
-          </div>
           <FormItem hasFeedback {...formItemLayout}>
-            <Input placeholder="微信号码"/>
-          </FormItem>
-          <FormItem {...formItemLayout}>
-            {getFieldDecorator('merchantId', {
-              initialValue: item.merchantId || merchantOptions[0].id,
+            {getFieldDecorator('province', {
+              initialValue: item.province,
               rules: [
                 {
+                  type: "string",
                   required: true,
                 },
               ],
-            })(
-            <Select placeholder="所属门店">
-              {
-                merchantOptions.map(item=>{
-                  return <Option key={item.id} value={item.id}>{item.name}</Option>
-                })
-              }
-              
-            </Select>)}
+            })(<Input placeholder="省市"/>)}
           </FormItem>
-          <div className={styles.privilage}>拥有权限</div>
-          <FormItem {...formItemLayout}>
-            {getFieldDecorator('privilage', {
-              initialValue: item.privilage,
+          <FormItem hasFeedback {...formItemLayout}>
+            {getFieldDecorator('address', {
+              initialValue: item.address,
               rules: [
                 {
+                  type: "string",
                   required: true,
                 },
               ],
-            })(
-            <CheckboxGroup
-            >
-              <Checkbox  value={1}>门店管理
-              </Checkbox>
-              <Checkbox  value={2}>会员管理
-              </Checkbox>
-              <Checkbox  value={3}>卡券管理
-              </Checkbox>
-            </CheckboxGroup>
-            )}
+            })(<Input placeholder="地址"/>)}
           </FormItem>
+          <FormItem hasFeedback {...formItemLayout}>
+            {getFieldDecorator('remark', {
+              initialValue: item.remark,
+              rules: [
+                {
+                },
+              ],
+            })(<Input placeholder="备注"/>)}
+          </FormItem>
+          
+         
           <FormItem  {...formItemLayout}>
             <Button onClick={this.handleOk} className="submit-buttom">确认</Button>
           </FormItem>

@@ -4,11 +4,7 @@ import { pathMatchRegexp } from 'utils'
 import { pageModel } from 'utils/model'
 import api from 'api'
 import services from 'services/index'
- 
-const {
-  updateUser,
-  createUser,
-} = api
+
 
 export default modelExtend(pageModel, {
   namespace: 'system',
@@ -21,7 +17,8 @@ export default modelExtend(pageModel, {
     pagination: {
       current: 0,
       pageSize: 10,
-      total: 0,
+      tp: 0,
+      tz: 2,
     }
   },
 
@@ -53,17 +50,19 @@ export default modelExtend(pageModel, {
               current: Number(payload.pn) || 0,
               pageSize: Number(payload.ps) || 10,
               // total: data.total,
+              tp: 0,
+              tz: 2,
             },
           },
         })
       }
     },
     async create({ payload }, { call, put }) {
-      const res = await services.createUser(payload);
-      if (res) {
+      const data = await services.createUser(payload);
+      if (data.success) {
         await put({ type: 'hideModal' })
       } else {
-        throw res
+        throw data
       }
     },
 
@@ -72,9 +71,9 @@ export default modelExtend(pageModel, {
     },
     
     *update({ payload }, { select, call, put }) {
-      const id = yield select(({ user }) => user.currentItem.id)
-      const newUser = { ...payload, id }
-      const data = yield services.updateUser(newUser)
+      // const id = yield select(({ system }) => system.currentItem.id)
+      const newModel = payload
+      const data = yield services.updateUser(newModel)
       if (data.success) {
         yield put({ type: 'hideModal' })
       } else {

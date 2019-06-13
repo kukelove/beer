@@ -11,12 +11,9 @@ import BaseList from './BaseList'
 
 class SuperTablePage extends PureComponent {
 
-
   static defaultProps = {
     listColumns: []
   }
-
-  
 
   handleRefresh = newQuery => {
 
@@ -38,6 +35,7 @@ class SuperTablePage extends PureComponent {
   }
     
   render() {
+    const that = this
     const { 
       location, 
       addModelButtonText, 
@@ -46,15 +44,39 @@ class SuperTablePage extends PureComponent {
       modelName,
       model,
       EditModal,
-      dispatch} = this.props
+      dispatch,
+      listOptions,} = this.props
 
     const { query } = location
     
-    const {modalType, currentItem, modalVisible} = model
+    const {modalType, currentItem, modalVisible, list, pagination} = model
 
     const listProps = {
+      listOptions,
+      pagination,
       listColumns,
       list:model.list,
+      onDeleteItem(id) {
+        dispatch({
+          type: modelName + '/delete',
+          payload: id,
+        }).then(() => {
+          that.handleRefresh({
+            pn:
+              list.length === 1 && pagination.current > 1
+                ? pagination.current - 1
+                : pagination.current,
+          })
+        })
+      },onEditItem(record) {
+        dispatch({
+          type: modelName + '/showModal',
+          payload: {
+            currentItem: record,
+            modalType: 'update',
+          },
+        })
+      },
     }
 
     const filterProps = {
@@ -64,17 +86,25 @@ class SuperTablePage extends PureComponent {
         ...query,
       },
       onFilterChange: (value) => {
-        this.handleRefresh({
+        that.handleRefresh({
           ...value,
           pn: 0,
           sz: 10,
         })
       },
       onAdd() {
+        console.log('%c⧭', 'color: #f2ceb6', 'click add button');
+        dispatch({
+          type: modelName + '/showModal',
+          payload: {
+            modalType: 'create',
+          },
+        })
       },
     }
     
     const modalProps = {
+  
       item: modalType === 'create' ? {} : currentItem,
       visible: modalVisible,
       maskClosable: false,
@@ -82,20 +112,16 @@ class SuperTablePage extends PureComponent {
       title: modalType,
       centered: true,
       onOk(payload) {
-        const data = Object.assign({}, payload)
-        data.province = payload.city[0];
-        data.city = payload.city[1];
-        data.country = payload.city[2];
         dispatch({
-          type: `system/${modalType}`,
-          payload: data,
+          type: modelName + `/${modalType}`,
+          payload,
         }).then(() => {
-          this.handleRefresh()
+          that.handleRefresh()
         })
       },
       onCancel() {
         dispatch({
-          type: 'system/hideModal',
+          type: modelName + '/hideModal',
         })
       },
     }
@@ -126,7 +152,8 @@ SuperTablePage.propTypes = {
   listColumns: PropTypes.array,
   modelName: PropTypes.string,
   EditModal: PropTypes.any,
-  model: PropTypes.object
+  model: PropTypes.object,
+  listOptions: PropTypes.array,
 }
 
 export default SuperTablePage

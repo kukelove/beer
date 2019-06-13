@@ -5,10 +5,7 @@ import { pageModel } from 'utils/model'
 import api from 'api'
 import services from 'services/index'
  
-const {
-  updateUser,
-  createUser,
-} = api
+
 
 export default modelExtend(pageModel, {
   namespace: 'user',
@@ -21,7 +18,8 @@ export default modelExtend(pageModel, {
     pagination: {
       current: 0,
       pageSize: 10,
-      total: 0,
+      tp: 0,
+      tz: 2,
     }
   },
 
@@ -54,6 +52,8 @@ export default modelExtend(pageModel, {
               current: Number(payload.pn) || 0,
               pageSize: Number(payload.ps) || 10,
               // total: data.total,
+              tp: 0,
+              tz: 2,
             },
           },
         })

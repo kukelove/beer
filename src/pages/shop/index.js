@@ -86,6 +86,9 @@ class Shop extends PureComponent {
         }).then(() => {
           handleRefresh()
         })
+        dispatch({
+          type: 'merchant/hideModal',
+        })
       },
       onCancel() {
         dispatch({

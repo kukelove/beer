@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'dva'
 import SuperTablePage from 'components/SuperTablePage'
 import { GENDER_TYPE } from '../../utils/constant'
+import Modal from './Modal'
 
 @connect(({ user, loading }) => ({ user, loading }))
 class User extends PureComponent {
@@ -57,10 +58,11 @@ class User extends PureComponent {
       filterText: '输入手机号查询',
       location,
       listColumns,
-      modelName: 'User',
+      modelName: 'user',
       model: user,
-      EditModal: false,
-      dispatch
+      dispatch,
+      EditModal: Modal,
+      listOptions: ['edit']
     }
     return <SuperTablePage {...pageProps }/>
   }

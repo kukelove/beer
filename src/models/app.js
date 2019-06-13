@@ -7,12 +7,15 @@ import { ROLE_TYPE } from 'utils/constant'
 import { queryLayout, pathMatchRegexp } from 'utils'
 import { CANCEL_REQUEST_MESSAGE } from 'utils/constant'
 import api from 'api'
+import services from 'services'
 import config from 'config'
 
 const { queryRouteList, logoutUser, queryUserInfo } = api
 
 export default {
   namespace: 'app',
+  merchants: [],
+  merchantMap: {},
   state: {
     user: {},
     permissions: {
@@ -70,6 +73,7 @@ export default {
 
     setup({ dispatch }) {
       dispatch({ type: 'query' })
+      dispatch({ type: 'fetchMerchants' })
     },
   },
   effects: {
@@ -150,6 +154,25 @@ export default {
         throw data
       }
     },
+    
+    *fetchMerchants({ payload }, { call, put }) {
+      const res = yield services.queryMerchantList({pn: 0, sz: 500});
+
+      if(res && res.data) {
+        let merchantMap = {}
+        res.data.map(item => {
+          merchantMap[item.id] = item.name
+        })
+
+        yield put({
+          type: 'updateState',
+          payload: {
+            merchantMap,
+            merchants:res.data
+          },
+        })
+      }
+    },
   },
   reducers: {
     updateState(state, { payload }) {
@@ -172,5 +195,6 @@ export default {
     allNotificationsRead(state) {
       state.notifications = []
     },
+   
   },
 }
