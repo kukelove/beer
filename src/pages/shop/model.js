@@ -30,7 +30,7 @@ export default modelExtend(pageModel, {
       history.listen(location => {
         if (pathMatchRegexp('/shop', location.pathname)) {
           const payload = Object.keys(location.query).length > 0? location.query : { pn: 0, sz: 10 }
-          console.log('debug: location / shop', payload)
+          console.log('debug: location /shop ', payload)
           dispatch({
             type: 'fetchList',
             payload,
@@ -51,7 +51,7 @@ export default modelExtend(pageModel, {
             pagination: {
               current: Number(payload.pn) || 0,
               pageSize: Number(payload.ps) || 10,
-              // total: data.total,
+              total: data.tz || 0,
             },
           },
         })

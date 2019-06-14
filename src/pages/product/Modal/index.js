@@ -1,13 +1,14 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
+import moment from 'moment'
 import { connect } from 'dva'
-import { Form, Input, Modal, Row , Button, Checkbox, Select } from 'antd'
+import { Form, Input, Modal, Row , Button, DatePicker} from 'antd'
 import { withI18n } from '@lingui/react'
-import styles from './Modal.less'
-
-const CheckboxGroup = Checkbox.Group;
-const { Option } = Select;
+import styles from './index.less'
+const { RangePicker } = DatePicker;
 const FormItem = Form.Item
+const dateFormat = 'YYYY/MM/DD';
+
 
 const formItemLayout = {
   labelCol: {
@@ -17,7 +18,7 @@ const formItemLayout = {
     span: 24,
   },
 }
-@withI18n()
+// @withI18n()
 @Form.create()
 @connect(({ app }) => ({ app }))
 class MerchantModal extends PureComponent {
@@ -33,8 +34,13 @@ class MerchantModal extends PureComponent {
       const data = {
         ...getFieldsValue(),
         id: item.id,
-        type: 3
       }
+      console.log('%c⧭', 'color: #f2ceb6', data);
+      // 日期进行处理
+      data.startTime = new Date(data.time[0].format(dateFormat))
+      data.endTime = new Date(data.time[1].format(dateFormat))
+      delete data.time
+      data.purchasePoint = Number(data.purchasePoint)
       onOk(data)
       resetFields()
     })
@@ -45,8 +51,7 @@ class MerchantModal extends PureComponent {
   }
 
   render() {
-
-    console.log('%c⧭', 'color: #e50000', '跟新modal');
+    
     const {item={}, form, title, app, ...modalProps } = this.props
     const merchantOptions = app.merchants
     const { getFieldDecorator } = form
@@ -63,71 +68,45 @@ class MerchantModal extends PureComponent {
                   required: true,
                 },
               ],
-            })(<Input placeholder="人员姓名"/>)}
+            })(<Input placeholder="优惠券名称"/>)}
           </FormItem>
-          <div id="cityCascader">
           <FormItem hasFeedback {...formItemLayout}>
-            {getFieldDecorator('phoneNumber', {
-              initialValue: item.phoneNumber,
+            {getFieldDecorator('discountPrice', {
+              initialValue: item.discountPrice,
               rules: [
                 {
                   type: "string",
                   required: true,
                 },
               ],
-            })(<Input placeholder="联系电话"/>)}
+            })(<Input placeholder="优惠金额，单位：元"/>)}
           </FormItem>
-          </div>
-        { !item.id && <FormItem hasFeedback {...formItemLayout}>
-            {getFieldDecorator('password', {
-              initialValue: item.password,
-              rules: [
-                {
-                  type: "string",
-                  required: true,
-                },
-              ],
-            })(<Input placeholder="请输入密码"/>)}
-          </FormItem>}
-          <FormItem {...formItemLayout}>
-            {getFieldDecorator('merchantId', {
-              initialValue: item.merchantId || merchantOptions[0].id,
+          
+          <FormItem hasFeedback {...formItemLayout}>
+            {getFieldDecorator('time', {
+              initialValue: item.time,
               rules: [
                 {
                   required: true,
                 },
               ],
-            })(
-            <Select placeholder="所属门店">
-              {
-                merchantOptions.map(item=>{
-                  return <Option key={item.id} value={item.id}>{item.name}</Option>
-                })
-              }
-              
-            </Select>)}
+            })( <RangePicker
+              style={{width: '100%'}}
+              // defaultValue={[moment('2015/01/01', dateFormat), moment('2015/01/01', dateFormat)]}
+              format={dateFormat}
+            />)}
           </FormItem>
-          <div className={styles.privilage}>拥有权限</div>
-          <FormItem {...formItemLayout}>
-            {getFieldDecorator('privilage', {
-              initialValue: item.privilage,
+          <FormItem hasFeedback {...formItemLayout}>
+            {getFieldDecorator('purchasePoint', {
+              initialValue: item.purchasePoint,
               rules: [
                 {
                   required: true,
                 },
               ],
-            })(
-            <CheckboxGroup
-            >
-              <Checkbox  value={1}>门店管理
-              </Checkbox>
-              <Checkbox  value={2}>会员管理
-              </Checkbox>
-              <Checkbox  value={3}>卡券管理
-              </Checkbox>
-            </CheckboxGroup>
-            )}
+            })(<Input type="number" placeholder="所需积分"/>)}
           </FormItem>
+         
           <FormItem  {...formItemLayout}>
             <Button onClick={this.handleOk} className="submit-buttom">确认</Button>
           </FormItem>

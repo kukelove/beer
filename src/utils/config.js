@@ -1,6 +1,6 @@
 module.exports = {
   siteName: 'PINKO',
-  copyright: 'Ant Design Admin  © 2018 zuiidea',
+  copyright: 'pinko  © 2019 kuke power',
   logoPath: '/logo.svg',
   apiPrefix: '/v1',
   fixedHeader: true, // sticky primary layout header
@@ -34,6 +34,6 @@ module.exports = {
         flag: '/china.svg',
       },
     ],
-    defaultLanguage: 'en',
+    defaultLanguage: 'zh',
   },
 }

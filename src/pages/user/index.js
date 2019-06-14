@@ -45,8 +45,8 @@ class User extends PureComponent {
       },
       {
         title: '备注',
-        dataIndex: 'note',
-        key: 'note',
+        dataIndex: 'remark',
+        key: 'remark',
       },
       
     ]

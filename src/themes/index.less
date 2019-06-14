@@ -16,6 +16,13 @@ body {
 }
 
 :global {
+  input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
+    input[type="number"]{
+        -moz-appearance: textfield;
+    }
   .table-option {
     display: flex;
     justify-content: center;

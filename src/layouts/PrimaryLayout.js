@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import withRouter from 'umi/withRouter'
 import { connect } from 'dva'
 import { MyLayout } from 'components'
-import { BackTop, Layout, Drawer } from 'antd'
+import { BackTop, Layout, Drawer, Spin } from 'antd'
 import { GlobalFooter } from 'ant-design-pro'
 import { enquireScreen, unenquireScreen } from 'enquire-js'
 import { config, pathMatchRegexp, langFromPath } from 'utils'
@@ -114,6 +114,8 @@ class PrimaryLayout extends PureComponent {
       },
     }
 
+    // console.log('%c⧭', 'color: #917399', this.props.loading);
+
     return (
       <Fragment>
         <Layout>
@@ -141,10 +143,13 @@ class PrimaryLayout extends PureComponent {
             id="primaryLayout"
           >
             <Header {...headerProps} />
+            <Spin delay={500} spinning={this.props.loading.global} tip="Loading...">
             <Content className={styles.content}>
+              
               <Bread routeList={newRouteList} />
               {hasPermission ? children : <Error />}
             </Content>
+            </Spin>
             <BackTop
               className={styles.backTop}
               target={() => document.querySelector('#primaryLayout')}

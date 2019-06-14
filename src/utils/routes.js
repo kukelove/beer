@@ -2,15 +2,22 @@ const database = [
   {
     id: '9',
     // breadcrumbParentId: '1',
-    name: 'Shops',
-    zh: {
-      name: '门店管理'
-    },
+    name: '门店管理',
     'pt-br': {
       name: 'Shops'
     },
     icon: 'shopping-cart',
     route: '/shop',
+  },
+  {
+    id: '7',
+    // breadcrumbParentId: '1',
+    name: '卡券管理',
+    'pt-br': {
+      name: 'Products'
+    },
+    icon: 'book',
+    route: '/product',
   },
   {
     id: '1',
@@ -105,58 +112,85 @@ const database = [
   },
   {
     id: '5',
-    breadcrumbParentId: '1',
-    name: 'Charts',
+    // breadcrumbParentId: '1',
+    name: 'picture',
     zh: {
-      name: 'Charts'
+      name: '广告图管理'
     },
     'pt-br': {
-      name: 'Graficos'
+      name: 'Usuário'
     },
-    icon: 'code-o',
+    icon: 'picture',
+    route: '/picture',
   },
   {
-    id: '51',
+    id: '8',
     breadcrumbParentId: '5',
-    menuParentId: '5',
-    name: 'ECharts',
+    menuParentId: '-1',
+    name: '编辑消息',
     zh: {
-      name: 'ECharts'
+      name: '编辑消息'
     },
     'pt-br': {
-      name: 'ECharts'
+      name: '编辑消息'
     },
-    icon: 'line-chart',
-    route: '/chart/ECharts',
-  },
-  {
-    id: '52',
-    breadcrumbParentId: '5',
-    menuParentId: '5',
-    name: 'HighCharts',
-    zh: {
-      name: 'HighCharts'
-    },
-    'pt-br': {
-      name: 'HighCharts'
-    },
-    icon: 'bar-chart',
-    route: '/chart/highCharts',
-  },
-  {
-    id: '53',
-    breadcrumbParentId: '5',
-    menuParentId: '5',
-    name: 'Rechartst',
-    zh: {
-      name: 'Rechartst'
-    },
-    'pt-br': {
-      name: 'Rechartst'
-    },
-    icon: 'area-chart',
-    route: '/chart/Recharts',
-  },
+    icon: 'message',
+    route: '/message',
+  }
+  // {
+  //   id: '5',
+  //   breadcrumbParentId: '1',
+  //   name: 'Charts',
+  //   zh: {
+  //     name: 'Charts'
+  //   },
+  //   'pt-br': {
+  //     name: 'Graficos'
+  //   },
+  //   icon: 'code-o',
+  // },
+  // {
+  //   id: '51',
+  //   breadcrumbParentId: '5',
+  //   menuParentId: '5',
+  //   name: 'ECharts',
+  //   zh: {
+  //     name: 'ECharts'
+  //   },
+  //   'pt-br': {
+  //     name: 'ECharts'
+  //   },
+  //   icon: 'line-chart',
+  //   route: '/chart/ECharts',
+  // },
+  // {
+  //   id: '52',
+  //   breadcrumbParentId: '5',
+  //   menuParentId: '5',
+  //   name: 'HighCharts',
+  //   zh: {
+  //     name: 'HighCharts'
+  //   },
+  //   'pt-br': {
+  //     name: 'HighCharts'
+  //   },
+  //   icon: 'bar-chart',
+  //   route: '/chart/highCharts',
+  // },
+  // {
+  //   id: '53',
+  //   breadcrumbParentId: '5',
+  //   menuParentId: '5',
+  //   name: 'Rechartst',
+  //   zh: {
+  //     name: 'Rechartst'
+  //   },
+  //   'pt-br': {
+  //     name: 'Rechartst'
+  //   },
+  //   icon: 'area-chart',
+  //   route: '/chart/Recharts',
+  // },
 ]
 
 export default database;

@@ -101,6 +101,11 @@ class Shop extends PureComponent {
       list: list,
       loading: loading.effects['merchant/fetchList'],
       pagination,
+      toPage(page) {
+        handleRefresh({
+          pn: page
+        })
+      },
       onEditItem(record) {
         dispatch({
           type: 'merchant/showModal',

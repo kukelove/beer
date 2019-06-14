@@ -15,13 +15,15 @@ const FormItem = Form.Item
 @Form.create()
 class Login extends PureComponent {
   handleOk = () => {
+    
+    console.log('%c⧭', 'color: #733d00', 11111);
     const { dispatch, form } = this.props
     const { validateFieldsAndScroll } = form
     validateFieldsAndScroll((errors, values) => {
       if (errors) {
         return
       }
-      dispatch({ type: 'login/login', payload: values })
+      dispatch({ type: 'app/loginV2', payload: values })
     })
   }
 
@@ -53,12 +55,12 @@ class Login extends PureComponent {
       <Fragment>
         <div className={styles.form}>
           <div className={styles.logo}>
-            <img alt="logo" src={config.logoPath} />
             <span>{config.siteName}</span>
           </div>
+          <div className={styles.subtitle}>会员后台管理系统</div>
           <form>
             <FormItem hasFeedback>
-              {getFieldDecorator('username', {
+              {getFieldDecorator('phoneNumber', {
                 rules: [
                   {
                     required: true,
@@ -66,8 +68,9 @@ class Login extends PureComponent {
                 ],
               })(
                 <Input
+                  style={{width:'400px'}}
                   onPressEnter={this.handleOk}
-                  placeholder={i18n.t`Username`}
+                  placeholder={i18n.t`请输入电话号码`}
                 />
               )}
             </FormItem>
@@ -80,35 +83,24 @@ class Login extends PureComponent {
                 ],
               })(
                 <Input
+                  style={{width:'400px'}}
                   type="password"
                   onPressEnter={this.handleOk}
                   placeholder={i18n.t`Password`}
                 />
               )}
             </FormItem>
-            <Row>
+            <Row >
               <Button
+                className={styles.submit}
                 type="primary"
                 onClick={this.handleOk}
                 loading={loading.effects.login}
               >
                 <Trans>Sign in</Trans>
               </Button>
-              <p>
-                <span>
-                  <Trans>Username</Trans>
-                  ：guest
-                </span>
-                <span>
-                  <Trans>Password</Trans>
-                  ：guest
-                </span>
-              </p>
             </Row>
           </form>
-        </div>
-        <div className={styles.footer}>
-          <GlobalFooter links={footerLinks} copyright={config.copyright} />
         </div>
       </Fragment>
     )

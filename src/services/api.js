@@ -3,7 +3,9 @@ export default {
 
   queryUserInfo: '/user',
   logoutUser: '/user/logout',
-  loginUser: 'POST /user/login',
+  loginUser: 'post /account/login',
+
+
 
   // queryUser: '/user/:id',
   // queryUserList: '/users',
@@ -24,5 +26,15 @@ export default {
   queryUserList: '/manage/user',
   createUser: 'post /manage/user',
   updateUser: 'put /manage/user',
-  deleteUser: 'delete /manage/user' 
+  deleteUser: 'delete /manage/user',
+
+
+  queryProductList: '/market/product',
+  createProduct: 'post /market/product',
+  deleteProduct: 'delete /market/product',
+  updateProduct: 'put /market/product',
+
+  createGallery: 'post /operation/gallery',
+  queryGalleryList: 'get /operation/gallery',
+  deleteGallery:  'delete /operation/gallery',
 }

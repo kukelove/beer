@@ -49,7 +49,6 @@ class User extends PureComponent {
       },
     ]
 
-    console.log('%c⧭', 'color: #f2ceb6', system);
     const  { list } = system;
     const pageProps = {
       addModelButtonText: '添加系统人员',

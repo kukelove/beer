@@ -7,7 +7,10 @@ const { confirm } = Modal
 
 @withI18n()
 class BaseList extends PureComponent {
-
+ 
+  state = {
+    jumpPage: ''
+  }
 
   async componentDidMount() {
     // await services.queryMerchant();
@@ -28,6 +31,8 @@ class BaseList extends PureComponent {
   }
 
   render() {
+
+    const  {current, total} = this.props.pagination
     const listColumns = [
       {
         title: '门店照片',
@@ -59,6 +64,9 @@ class BaseList extends PureComponent {
         title: '营业时间',
         dataIndex: 'openHour',
         key: 'openHour',
+        render: (text)=> {
+          return <div>{text.split(',')[0]} - {text.split(',')[1]}</div>
+        }
       },
       {
         title: '纬度',
@@ -99,14 +107,36 @@ class BaseList extends PureComponent {
         rowKey={(record, index) => index}
       />
         <div className={styles.pagination}>
-          <div style={{marginRight: '20px'}}><Pagination defaultCurrent={1} total={50} /></div>
+          <div style={{marginRight: '20px'}}>
+            <Pagination onChange={(page)=>{
+              this.props.toPage(page - 1)
+            }} pageSize={10} current={current + 1} total={total} />
+          </div>
           <span className={styles.quickJumper}>
             <div className={styles.quickJumperNumber}>
-              <input placeholder="页数"  className={styles.number}/>
+              <input
+                min="1"
+                type="number"
+                placeholder="页数" 
+                value={this.state.jumpPage} 
+                className={styles.number}
+                onChange={(e)=>{
+                  if(e.target.value !=='' &&  Number(e.target.value) > 0) {
+                    console.log(e.target.value)
+                    this.setState({
+                      jumpPage: Number(e.target.value)
+                    })
+                  }else {
+                    this.setState({
+                      jumpPage: ''
+                    })
+                  }
+                }}
+              />
             </div>
             <div className={styles.quickJumperLine}>
             </div>
-            <div className={styles.quickJumperBox}>
+            <div onClick={()=>this.props.toPage(this.state.jumpPage - 1)} className={styles.quickJumperBox}>
               跳转
             </div>
           </span>

@@ -1,4 +1,6 @@
 import React, { PureComponent,Fragment } from 'react'
+import axios from 'axios'
+import qs from 'qs';
 import PropTypes from 'prop-types'
 import { Icon, Form, Input, Modal, Select, Row , Button, Cascader, Col, TimePicker, Upload} from 'antd'
 import { Trans, withI18n } from '@lingui/react'
@@ -25,6 +27,10 @@ const formItemLayout = {
 @Form.create()
 class MerchantModal extends PureComponent {
 
+  state = {
+    poi: []
+  }
+
   handleOk = () => {
     const { item = {}, onOk, form } = this.props
     const { validateFields, getFieldsValue } = form
@@ -37,20 +43,48 @@ class MerchantModal extends PureComponent {
         ...getFieldsValue(),
         // id: item.id,
       }
+      // 出去的数据需要进行加工
+      data.latitude = data.latlongitude.split(',')[0] 
+      data.longitude = data.latlongitude.split(',')[1] 
       onOk(data)
     })
   }
 
   formatCity(record) {
-    return [record.province, record.city, record.country]
+    if(record.country) {
+      return [record.province, record.city, record.country]
+    }
+  }
+
+  searchAdress() {
+    const { form } = this.props
+    const { getFieldValue } = form
+    const address =  getFieldValue('address')
+    const city =  getFieldValue('city')
+    if(address && city) {
+      axios.get(`/place/v2/search?query=${address}&region=${city}&output=json&ak=NY6OTfDXGR2ii6Gsye6ybmFKSgbtXnHy`)
+      .then(response => {
+        const { statusText, status, data } = response
+        if(data.results) {
+          this.setState({poi: data.results})
+        }
+      })
+      .catch(err => {
+        throw err;
+      })
+    }
   }
 
   render() {
+
     const uploadProps = {
       action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
       multiple: true,
     };
     const {item = {}, title, onOk, form, ...modalProps } = this.props
+    if(item.latitude) {
+      item.latlongitude = item.latitude + ',' + item.longitude
+    }
     const { getFieldDecorator } = form
     return (
       <Modal {...modalProps} footer={false} width={600} visible={true}>
@@ -68,7 +102,7 @@ class MerchantModal extends PureComponent {
             })(<Input placeholder="店铺名称"/>)}
           </FormItem>
           <div id="cityCascader">
-          <FormItem hasFeedback {...formItemLayout}>
+          <FormItem  {...formItemLayout}>
          
             {getFieldDecorator('city', { 
                 initialValue: this.formatCity(item),
@@ -76,7 +110,7 @@ class MerchantModal extends PureComponent {
                 <Cascader
                   style={{ width: '100%' }}
                   options={city}
-                  placeholder="城市"
+                  placeholder="请选择城市"
                   getPopupContainer={() =>
                     document.getElementById('cityCascader')
                   }
@@ -94,7 +128,7 @@ class MerchantModal extends PureComponent {
                     required: true,
                   },
                 ],
-              })(<Input placeholder="详细地址"/>)}
+              })(<Input onBlur={(e)=>this.searchAdress()} placeholder="详细地址"/>)}
           </FormItem>
           <FormItem hasFeedback {...formItemLayout}>
             {getFieldDecorator('phoneNumber', {
@@ -110,7 +144,7 @@ class MerchantModal extends PureComponent {
         
           <FormItem hasFeedback {...formItemLayout}>
             {getFieldDecorator('openHour', {
-              initialValue: item.openHour,
+              initialValue: item.openHour || '08:00,23:00',
               rules: [
                 {
                   required: true,
@@ -119,6 +153,32 @@ class MerchantModal extends PureComponent {
               ],
             })(
               <TimeRangePicker></TimeRangePicker>
+            )}
+          </FormItem>
+          <FormItem hasFeedback {...formItemLayout}>
+            {getFieldDecorator('latlongitude', {
+              initialValue: item.latlongitude,
+              rules: [
+                {
+                  type: "string",
+                  required: true,
+                },
+              ],
+            })(
+              <Select
+              showSearch
+              placeholder="选择定位"
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+            >
+              {this.state.poi.map((item)=> {
+                return <Option value={item.location.lat + ',' +  item.location.lng}>{item.name}-{item.address}</Option>
+              }) }
+            
+            </Select>,
+
             )}
           </FormItem>
           <FormItem {...formItemLayout}>

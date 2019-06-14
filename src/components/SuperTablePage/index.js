@@ -56,6 +56,11 @@ class SuperTablePage extends PureComponent {
       pagination,
       listColumns,
       list:model.list,
+      toPage(page) {
+        that.handleRefresh({
+          pn: page
+        })
+      },
       onDeleteItem(id) {
         dispatch({
           type: modelName + '/delete',
@@ -117,6 +122,9 @@ class SuperTablePage extends PureComponent {
           payload,
         }).then(() => {
           that.handleRefresh()
+          dispatch({
+            type: modelName + '/hideModal',
+          })
         })
       },
       onCancel() {

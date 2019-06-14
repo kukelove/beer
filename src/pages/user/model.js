@@ -19,7 +19,7 @@ export default modelExtend(pageModel, {
       current: 0,
       pageSize: 10,
       tp: 0,
-      tz: 2,
+      total: 0,
     }
   },
 
@@ -53,7 +53,7 @@ export default modelExtend(pageModel, {
               pageSize: Number(payload.ps) || 10,
               // total: data.total,
               tp: 0,
-              tz: 2,
+              total: data.tz,
             },
           },
         })

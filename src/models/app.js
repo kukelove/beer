@@ -23,11 +23,11 @@ export default {
     },
     routeList: [
       {
-        id: '1',
-        icon: 'laptop',
-        name: 'Dashboard',
-        zhName: '仪表盘',
-        router: '/dashboard',
+        // id: '1',
+        // icon: 'laptop',
+        // name: 'Dashboard',
+        // zhName: '仪表盘',
+        // router: '/dashboard',
       },
     ],
     locationPathname: '',
@@ -77,10 +77,26 @@ export default {
     },
   },
   effects: {
+    *loginV2({ payload }, { put, call, select }) {
+      payload.type = 3
+      const data = yield services.loginUser(payload)
+      const { locationQuery } = yield select(_ => _.app)
+      if (data.success) {
+        const { from } = locationQuery
+        yield put({ type: 'app/query' })
+        if (!pathMatchRegexp('/login', from)) {
+          if (from === '/') router.push('/shop')
+          else router.push(from)
+        } else {
+          router.push('/shop')
+        }
+      }
+    },
     *query({ payload }, { call, put, select }) {
+      console.log('11111')
       const user = {avatar: "",
       id: 1,
-      permissions: {visit: ["1", "2", "21", "7", "5", "51", "52", "53", "9"], role: "guest"},
+      permissions: {visit: ["1", "2", "21", "7", "5", "51", "52", "53", "9", "8"], role: "guest"},
       username: "guest"}
       // const { success, user } = yield call(queryUserInfo, payload)
       const { locationPathname } = yield select(_ => _.app)
@@ -117,7 +133,7 @@ export default {
         })
         if (pathMatchRegexp(['/','/login'], window.location.pathname)) {
           router.push({
-            pathname: '/dashboard',
+            pathname: '/shop',
           })
         }
       } else if (queryLayout(config.layouts, locationPathname) !== 'public') {
@@ -131,28 +147,20 @@ export default {
     },
 
     *signOut({ payload }, { call, put }) {
-      const data = yield call(logoutUser)
-      if (data.success) {
+      // const data = yield call(logoutUser)
+        console.log('%c⧭', 'color: #aa00ff', '???');
         yield put({
           type: 'updateState',
           payload: {
             user: {},
             permissions: { visit: [] },
             menu: [
-              {
-                id: '1',
-                icon: 'laptop',
-                name: 'Dashboard',
-                zhName: '仪表盘',
-                router: '/dashboard',
-              },
             ],
           },
         })
-        yield put({ type: 'query' })
-      } else {
-        throw data
-      }
+        router.push({
+          pathname: '/login',
+        })
     },
     
     *fetchMerchants({ payload }, { call, put }) {

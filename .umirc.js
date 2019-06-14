@@ -79,6 +79,11 @@ export default {
   // },
   // Webpack Configuration
   proxy: {
+    "/place": {
+      "target": "http://api.map.baidu.com/",
+      "changeOrigin": true,
+      // "pathRewrite": { "^/api" : "" }
+    },
     "/v1": {
       "target": "http://api.m3.infoloop.cn/",
       "changeOrigin": true,
