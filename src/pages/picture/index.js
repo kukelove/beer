@@ -1,10 +1,10 @@
 import React, { PureComponent } from 'react'
-import {Collapse, Upload, Icon, Modal, message, Button} from 'antd' 
+import {Collapse, Modal} from 'antd' 
 import { connect } from 'dva'
 import { Page} from 'components'
-import  styles from './index.less';
 import BannerAreaPanel from './BannerAreaPanel/index'
 import MessageList from './MessageList/index'
+import GalleryPanel from './GalleryPanel/index'
 
 const Panel = Collapse.Panel;
 const confirm = Modal.confirm;
@@ -40,47 +40,18 @@ class Picture extends PureComponent {
 
   
   render() {
-    const {galleryList} = this.props.picture
-    console.log('%c⧭', 'color: #00e600', galleryList); 
-
-    const uploadGalleryProps = {
-      action: "/v1/resource/image",
-      multiple: false,
-      showUploadList: false,
-      onChange: ({file}) =>{
-        if(file.response && file.response.url) {
-          // 如果上传成功就调用创建照片墙的接口
-          this.props.dispatch({
-            type: 'picture/createGallery',
-            payload: {"image": file.response.url,"status":1}
-          })
-        }
-      }
-    };
-
+  
     return <Page inner>
       <Collapse expandIconPosition="right" bordered={true} defaultActiveKey={['1']}>
         <Panel header="首页屏轮播图（不超过6张）" key="2">
-            <div className={styles.openPage}>
-            {galleryList.map(pic=>{
-              return <div key={pic.id} style={{backgroundImage: `url(${pic.image})`}} className={styles.indexPicture}>
-                <div className={styles.options}>
-                  <Icon className={styles.icon} style={{ fontSize: '25px' }} type="form" /> &nbsp; 
-                  <Icon onClick={()=>this.onDeleteGallery(pic.id)} className={styles.icon} style={{ fontSize: '25px' }} type="delete" />
-                </div>
-            </div>
-            })}
-            <Upload {...uploadGalleryProps}>
-                <div style={{background: 'rgba(238,238,238,1)'}} className={styles.indexPicture}>
-                  添加图片
-              </div>
-            </Upload>
-          </div>  
+          <BannerAreaPanel></BannerAreaPanel>
         </Panel>
       </Collapse>
       <br/>
       <Collapse expandIconPosition="right" bordered={true} defaultActiveKey={['1']}>
-        <Panel header="首页轮播图（不超过6张）" key="2"> <BannerAreaPanel></BannerAreaPanel></Panel>
+        <Panel header="首页轮播图（不超过6张）" key="2"> 
+        <GalleryPanel key="ch"></GalleryPanel>
+        </Panel>
       </Collapse>
       <br/>
       <Collapse expandIconPosition="right" bordered={true} defaultActiveKey={['1']}>

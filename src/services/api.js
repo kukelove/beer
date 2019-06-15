@@ -37,4 +37,10 @@ export default {
   createGallery: 'post /operation/gallery',
   queryGalleryList: 'get /operation/gallery',
   deleteGallery:  'delete /operation/gallery',
+  updateGallery: 'put /operation/gallery',
+
+  queryGalleryNameList: 'get /operation/gallery/list',
+  createGalleryNameList: 'post /operation/gallery/list',
+  deleteGalleryNameList: 'delete /operation/gallery/list',
+  updateGalleryNameList: 'put /operation/gallery/list'
 }

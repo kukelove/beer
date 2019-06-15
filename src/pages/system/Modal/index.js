@@ -125,6 +125,8 @@ class MerchantModal extends PureComponent {
               </Checkbox>
               <Checkbox  value={3}>卡券管理
               </Checkbox>
+              <Checkbox  value={4}>页面配置
+              </Checkbox>
             </CheckboxGroup>
             )}
           </FormItem>

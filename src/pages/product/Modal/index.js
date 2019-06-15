@@ -71,6 +71,16 @@ class MerchantModal extends PureComponent {
             })(<Input placeholder="优惠券名称"/>)}
           </FormItem>
           <FormItem hasFeedback {...formItemLayout}>
+            {getFieldDecorator('discription', {
+              initialValue: item.discription,
+              rules: [
+                {
+                  required: true,
+                },
+              ],
+            })(<Input placeholder="描述"/>)}
+          </FormItem>
+          <FormItem hasFeedback {...formItemLayout}>
             {getFieldDecorator('discountPrice', {
               initialValue: item.discountPrice,
               rules: [

@@ -81,6 +81,14 @@ export default {
       payload.type = 3
       const data = yield services.loginUser(payload)
       const { locationQuery } = yield select(_ => _.app)
+      console.log('%c⧭', 'color: #1d5673', data);
+      localStorage.user = JSON.stringify(data)
+      yield put({
+        type: 'updateState',
+        payload: {
+          user: data
+        },
+      })
       if (data.success) {
         const { from } = locationQuery
         yield put({ type: 'app/query' })
@@ -93,16 +101,17 @@ export default {
       }
     },
     *query({ payload }, { call, put, select }) {
-      console.log('11111')
-      const user = {avatar: "",
-      id: 1,
-      permissions: {visit: ["1", "2", "21", "7", "5", "51", "52", "53", "9", "8"], role: "guest"},
-      username: "guest"}
+
       // const { success, user } = yield call(queryUserInfo, payload)
       const { locationPathname } = yield select(_ => _.app)
-
-      if ( user) {
-        // const { list } = yield call(queryRouteList)
+      // const { list } = yield call(queryRouteList)
+      let user = {}
+      if(localStorage.user) {
+        user = JSON.parse(localStorage.user)
+        user.privilage = user.privilage.map(String)
+        console.log('%c⧭', 'color: #f200e2', user);
+        
+        user.permissions = {visit: user.privilage, role: "guest"}
         const list = routes;
         const { permissions } = user
         let routeList = list
@@ -147,20 +156,18 @@ export default {
     },
 
     *signOut({ payload }, { call, put }) {
-      // const data = yield call(logoutUser)
-        console.log('%c⧭', 'color: #aa00ff', '???');
-        yield put({
-          type: 'updateState',
-          payload: {
-            user: {},
-            permissions: { visit: [] },
-            menu: [
-            ],
-          },
-        })
-        router.push({
-          pathname: '/login',
-        })
+      yield put({
+        type: 'updateState',
+        payload: {
+          user: {},
+          permissions: { visit: [] },
+          menu: [
+          ],
+        },
+      })
+      router.push({
+        pathname: '/login',
+      })
     },
     
     *fetchMerchants({ payload }, { call, put }) {
@@ -171,7 +178,6 @@ export default {
         res.data.map(item => {
           merchantMap[item.id] = item.name
         })
-
         yield put({
           type: 'updateState',
           payload: {
