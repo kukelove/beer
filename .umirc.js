@@ -3,6 +3,7 @@ import { resolve } from 'path'
 import { i18n } from './src/utils/config'
 
 export default {
+  base: '/pinko/admin',
   ignoreMomentLocale: true,
   targets: { ie: 9 },
   treeShaking: true,
