@@ -41,6 +41,7 @@ class AddMessage extends PureComponent {
 
   state = {
     text: '',
+    edit: {}
   }
 
   handleOk = () => {
@@ -108,11 +109,15 @@ class AddMessage extends PureComponent {
               })(<ImageUpload count={1}/>)}
             </Form.Item>
             <Form.Item label="正文内容">
-              <ReactQuill value={this.state.text} onChange={this.handleChange} />
+              <ReactQuill style={{height: '500px'}} value={this.state.text} onChange={this.handleChange} />
             </Form.Item>
             {/* <Form.Item label="首页显示">
               {getFieldDecorator('status', { valuePropName: 'checked' })(<Switch />)}
             </Form.Item> */}
+            <br/>
+            <br/>
+            <br/>
+            <br/>
             <Form.Item label="所在列表">
               {getFieldDecorator('galleryListId', {
                 rules: [{

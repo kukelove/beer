@@ -4,6 +4,9 @@ import { connect } from 'dva'
 import { stringify } from 'qs'
 import router from 'umi/router';
 import  styles from './index.less';
+import moment from 'moment'
+
+
 
 
 const confirm = Modal.confirm;
@@ -91,10 +94,10 @@ class MessageList extends PureComponent {
               <div className={styles.info}>
                 <div className={styles.header}>
                   <div className={styles.title}>{item.title}</div>
-                  <div className={styles.time}>2018-01-01</div>
+                  <div className={styles.time}>{ moment(item.time).format('YYYY-MM-DD')}</div>
                 </div>
                 <div className={styles.belong}>所属列表：{item.galleryListName}</div>
-                <div className={styles.content}>文章内容概要文章内容概要文章内容概要文章内容概要文章内容概要文章内容概要文章内容概要文章内容概要文章内容概要...</div>
+                <div className={styles.content}>{item.description}</div>
               </div>
               <div className={styles.options}></div>
             </div>
