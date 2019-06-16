@@ -36,13 +36,15 @@ export default function request(options) {
   }
 
   if(method === 'delete' || method === 'put') {
-    url = url+'/'+ data.id
+    options.url = url+'/'+ data.id
   }
-
-  options.url =
-    method.toLocaleLowerCase() === 'get'
-      ? `${url}${isEmpty(cloneData) ? '' : '?'}${qs.stringify(cloneData)}`
-      : url
+  else if (method.toLocaleLowerCase() === 'get' && !isEmpty(cloneData)) {
+    if(typeof cloneData !== 'object') {
+      options.url = url+'/'+ cloneData
+    }else {
+      options.url = url + `?${qs.stringify(cloneData)}`
+    }
+  }
 
   options.cancelToken = new CancelToken(cancel => {
     window.cancelRequest.set(Symbol(Date.now()), {

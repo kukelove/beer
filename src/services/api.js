@@ -42,5 +42,17 @@ export default {
   queryGalleryNameList: 'get /operation/gallery/list',
   createGalleryNameList: 'post /operation/gallery/list',
   deleteGalleryNameList: 'delete /operation/gallery/list',
-  updateGalleryNameList: 'put /operation/gallery/list'
+  updateGalleryNameList: 'put /operation/gallery/list',
+
+  queryBannerList: 'get /operation/banner',
+  deleteBanner: 'delete /operation/banner',
+  createBanner: 'post /operation/banner',
+
+
+  createMessage: 'post /operation/banner/message',
+  queryMessage: 'get /operation/banner/message',
+  deleteMessage: 'delete /operation/banner/message',
+  findmessage:   'get /operation/banner/message',
+  updateMessage:   'put /operation/banner/message'
+
 }

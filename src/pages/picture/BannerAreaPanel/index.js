@@ -1,38 +1,136 @@
 import React, { PureComponent } from 'react'
-import { Upload, Icon, Modal, message, Button, Row, Select} from 'antd' 
+import { Upload, Icon, Modal, Input, Button, Row, message, Select} from 'antd' 
 import { connect } from 'dva'
 import { Page} from 'components'
 import  styles from './index.less';
 import add_png from '../../../../public/add_upload.png'
 const confirm = Modal.confirm;
-const Option = Select.Option;
+
+
 
 @connect(({ picture, loading }) => ({ picture, loading }))
 class GalleryPanel extends PureComponent {
 
   state = {
-    modalShow: false,
-    edit: {
-
+    galleryNamemodalShow: false,
+    imageEditModalShow: false,
+    galleryNameEdit: {
+    },
+    imageEdit: {
     }
   }
 
-  onEdit(item) {
-    this.setState(
-      {modalShow: true, edit: item}
-    )
-  }
-  handleOk = () => {
-    this.props.dispatch({
-      type: 'picture/createGallery',
-      payload: Object.assign({}, this.state.edit)
+  onAddBannerList() {
+    this.setState({
+      galleryNamemodalShow: true,
+      galleryNameEdit: {}
     })
-    this.setState({modalShow: false, edit: {}})
   }
 
+  onSubmitGalleryName() {
+    const {dispatch} = this.props
+    const galleryNameEdit = this.state.galleryNameEdit;
+    if(galleryNameEdit.name && galleryNameEdit.name !== '') {
+      if(galleryNameEdit.id) {
+        dispatch({
+          type: 'picture/updateGalleryList',
+          payload: galleryNameEdit,
+        })
+      }else {
+        dispatch({
+          type: 'picture/createGalleryList',
+          payload: galleryNameEdit,
+        })
+      }
+      
+      this.setState({galleryNamemodalShow: false})
+    }else {
+      message.fail('请填入列表名称')
+    }
+  }
+
+  onSubmitImage() {
+    const {dispatch} = this.props
+    if(this.state.imageEdit.image && this.state.imageEdit.image !== '') {
+      if(this.state.imageEdit.id) {
+        console.log('%c⧭', 'color: #735656', '???');
+        dispatch({
+          type: 'picture/updateGallery',
+          payload: this.state.imageEdit,
+        })
+      }else {
+        dispatch({
+          type: 'picture/createGallery',
+          payload: this.state.imageEdit,
+        })
+      }
+      this.setState({imageEditModalShow: false})
+    }else {
+      message.error('请先上传图片')
+    }
+  }
+
+  onGalleryNameChange = (value) => {
+    this.setState({
+      galleryNameEdit: {
+        ...this.state.galleryNameEdit,
+        name: value,
+      }
+    })
+  }
+
+  onGalleryNameDelete = (id) => {
+    const {dispatch} = this.props
+    confirm({
+      title: '确定删除该项？',
+      onOk() {
+        dispatch({
+          type: 'picture/deleteGalleryList',
+          payload: id,
+        })
+      },
+    })
+  }
+
+  onGalleryNameEdit = (item) => {
+    this.setState({
+      galleryNamemodalShow: true,
+      galleryNameEdit: item
+    })
+  }
+
+  onAddImage = (galleryListId) => {
+    this.setState({
+      imageEditModalShow: true,
+      imageEdit: {
+        galleryListId,
+      }
+    })
+  }
+
+   onUpdateImage = (item) => {
+    this.setState({
+      imageEditModalShow: true,
+      imageEdit: item
+    })
+  }
+
+  onDeleteImage = (id, galleryListId) => {
+    const {dispatch} = this.props
+    confirm({
+      title: '确定删除该项？',
+      onOk() {
+        dispatch({
+          type: 'picture/deleteGallery',
+          payload: {id, galleryListId},
+        })
+      },
+    })
+  }
+  
   render() {
-    const { image } = this.state.edit
-    const { galleryList } = this.props.picture
+    const { galleryNameEdit, imageEdit } = this.state
+    const {galleryNameList, galleryList, galleryListMap} = this.props.picture
     const uploadGalleryProps = {
       action: "/v1/resource/image",
       multiple: false,
@@ -40,48 +138,76 @@ class GalleryPanel extends PureComponent {
       onChange: ({file}) =>{
         if(file.response && file.response.url) {
           // 如果上传成功就调用创建照片墙的接口
-          this.setState({edit: {...this.state.edit, image: file.response.url}})
+          this.setState({imageEdit: { ...imageEdit ,image: file.response.url}})
         }
       }
     };
     return <>
       <Modal
         // title="上传图片"
-        visible={this.state.modalShow}
-        onOk={this.handleOk}
-        onCancel={()=>this.setState({modalShow: false})}
+        visible={this.state.galleryNamemodalShow}
+        // onOk={this.handleOk}
+        footer={false}
+        onCancel={()=>this.setState({galleryNamemodalShow: false})}
         >
-        <div className={styles.modelArea}>
-          <p>首轮轮播图</p>
+        <div>
+          <p className={styles.modalTitle}>{this.state.galleryNameEdit.id? '编辑': '新增'}列表</p>
+          <Input 
+            value={galleryNameEdit.name}
+            onChange={(e)=>this.onGalleryNameChange(e.target.value)}
+            style={{marginBottom: '20px'}} placeholder="输入列表名称"></Input>
+          <br/>
+          <Button onClick={()=>this.onSubmitGalleryName()}  className="common-bottom" type="primary">确认</Button>
+        </div>
+        
+      </Modal>
+      <Button onClick={()=>this.onAddBannerList()} className="create-button"> + 添加列表</Button>
+      {galleryNameList.map(item=>{
+        return <Row key={item.name} className={styles.bannerRow}>
+            <div className={styles.rowTitle}>{item.name}&nbsp; 
+              <Icon onClick={()=>this.onGalleryNameEdit(item)} style={{ fontSize: '16px' }} type="form" />&nbsp;&nbsp;
+              <Icon onClick={()=>this.onGalleryNameDelete(item.id)} style={{ fontSize: '16px' }} type="delete" />
+            </div>
+            <div className={styles.bannerArea}>
+              { galleryListMap[item.id]? galleryListMap[item.id].map(image=> <div key={image.id} style={{backgroundImage: `url(${image.image})`}} className={styles.galleryPic}>
+                  <div className={styles.options}>
+                    <Icon onClick={()=>this.onUpdateImage(image)} className={styles.icon} style={{ fontSize: '25px' }} type="form" />&nbsp;
+                    <Icon onClick={()=>this.onDeleteImage(image.id, image.galleryListId)} className={styles.icon} style={{ fontSize: '25px' }} type="delete" />
+                  </div>
+              </div>): 
+            <div onClick={()=>this.onAddImage(item.id)} className={styles.galleryPic}>
+              <img alt="" src={add_png}/>
+              <div > 添加照片 </div>
+            </div>
+            }
+              {(galleryListMap[item.id] && galleryListMap[item.id].length) <6 && <div onClick={()=>this.onAddImage(item.id)} className={styles.galleryPic}>
+                  <img alt="" src={add_png}/>
+                  <div > 添加照片 </div>
+              </div>}
+            </div>
+          </Row>
+      })}
+      <Modal
+        // title="上传图片"
+        footer={false}
+        visible={this.state.imageEditModalShow}
+        // onOk={this.handleOk}
+        onCancel={()=>this.setState({imageEditModalShow: false})}
+        >
+        <div className={styles.modalTitle}>
+          <p className={styles.modelArea}>首轮轮播图</p>
            <Upload {...uploadGalleryProps}>
-           <div style={image ? {
+           <div style={imageEdit.image ? {
              backgroundSize: '100% 100%',
              backgroundRepeat: 'no-repeat',
-             backgroundImage: `url(${image})`}: {}} className={styles.uploadArea}>
-            {!image && <span>+点击上传图片</span>}
+             backgroundImage: `url(${imageEdit.image})`}: {}} className={styles.uploadArea}>
+            {!imageEdit.image && <span>+点击上传图片</span>}
           </div>
            </Upload>
-          <Select style={{ width: '360px' }}>
-          </Select>
+          <Button onClick={()=>this.onSubmitImage()}  className="common-bottom" type="primary">确认</Button>
         </div>
       </Modal>
-      <div className={styles.openPage}>
-        {galleryList.map(pic=>{
-          return <div key={pic.id} style={{backgroundImage: `url(${pic.image})`}} className={styles.indexPicture}>
-            <div className={styles.options}>
-              <Icon onClick={()=>{this.onEdit(pic)}} className={styles.icon} style={{ fontSize: '25px' }} type="form" /> &nbsp; 
-              <Icon onClick={()=>this.onDeleteGallery(pic.id)} className={styles.icon} style={{ fontSize: '25px' }} type="delete" />
-            </div>
-        </div>
-        })}
-       
-            <div onClick={()=>this.setState({modalShow: true})} style={{background: 'rgba(238,238,238,1)'}} className={styles.indexPicture}>
-              <img alt="" src={add_png}/>
-              添加图片
-          </div>
-       
-        </div>  
-        </>
+    </>
       
   }
 }

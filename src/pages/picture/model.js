@@ -10,15 +10,16 @@ export default modelExtend(pageModel, {
   namespace: 'picture',
   state: {
     galleryNameList: [],
-    bannersList: [],
+    bannerList: [],
     galleryList: [],
     galleryListMap: {},
     list:[],
+    messageList:[],
     pagination: {
       current: 0,
-      pageSize: 100,
-      tp: 0,
-      tz: 2,
+      sz: 10,
+      pn: 0,
+      total:0,
     }
   },
   subscriptions: {
@@ -38,11 +39,70 @@ export default modelExtend(pageModel, {
               "sz": 100
             }
           })
+          dispatch({
+            type: 'queryBannerList',
+            payload: {
+              "pn": 0,
+              "sz": 100
+            }
+          })
+          dispatch({
+            type: 'queryMessageList',
+            payload: {
+              "pn": 0,
+              "sz": 10
+            }
+          })
         }
       })
     },
   },
   effects: {
+    *createBanner({ payload = {} }, { call, put }) {
+      const res = yield services.createBanner(payload);
+      if(res) {
+        message.success('上传首页轮播图成功！')
+        yield put({
+          type: 'queryBannerList',
+          payload: { pn: 0, sz: 100 }
+        })
+      }
+    },
+    *deleteMessage({ payload = {} }, { call, put }) {
+      yield services.deleteMessage({id: payload})
+    },
+    *queryMessageList({ payload = {} }, { call, put }) {
+      const res = yield services.queryMessage(payload)
+      //
+      yield put({
+        type: 'updateState',
+        payload: {
+          messageList: res.data,
+          pagination: {
+            current: Number(payload.pn) || 0,
+            pageSize: Number(payload.ps) || 10,
+            total: res.tz || 0,
+          },
+        },
+      })
+    },
+    *deleteBanner({ payload = {} }, { call, put }) {
+      yield services.deleteBanner({id: payload})
+      yield put({
+        type: 'queryBannerList',
+      })
+    },
+    *queryBannerList({ payload = {"pn": 0,"sz": 100}}, { call, put }) {
+      const res = yield services.queryBannerList(payload)
+      yield put({
+        type: 'updateState',
+        payload: {
+          bannerList: res.data
+          
+        },
+      })
+    },
+
     *queryGalleryList({ payload = {} }, { call, put }) {
       const data = yield services.queryGalleryList(payload)
       const galleryListMap = {}
@@ -88,18 +148,21 @@ export default modelExtend(pageModel, {
         }
       })
       let list = galleryListMap[payload.galleryListId];
-      galleryListMap[payload.galleryListId] = list.map(item => {
+      list.map((item, index) => {
         if(item.id === payload.id){
-          return payload
+          list[index] = payload
         }
-        return;
       })
+
+      console.log('%c⧭', 'color: #408059', galleryListMap);
       yield put({
         type: 'updateState',
         payload: { galleryList, galleryListMap }
       })
       message.success('修改成功')
     },
+
+
 
    *createGallery({ payload = {} }, { call, put }) {
       const res = yield services.createGallery(payload);
@@ -124,11 +187,14 @@ export default modelExtend(pageModel, {
 
     *createGalleryList({ payload = {} }, { call, put, select }) {
       const res = yield services.createGalleryNameList(payload);
-      const { galleryNameList } = yield select(_ => _.picture)
-      galleryNameList.unshift(payload)
+      // const { galleryNameList } = yield select(_ => _.picture)
       yield put({
-        type: 'updateState',
-        payload: { galleryNameList }
+        type: 'queryGalleryList',
+        payload: { pn: 0, sz: 100 }
+      })
+      yield put({
+        type: 'queryGalleryNameList',
+        payload: { pn: 0, sz: 100 }
       })
     },
     

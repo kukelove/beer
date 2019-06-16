@@ -14,6 +14,10 @@ function getBase64(file) {
 
 export default class ImagesUpload extends Component {
 
+  componentDidMount() {
+
+    console.log('%c⧭', 'color: #00bf00', this.props);
+  }
 
   static defaultProps = { 
     count: 3
@@ -58,7 +62,13 @@ export default class ImagesUpload extends Component {
   };
 
   render() {
-    const { previewVisible, previewImage, fileList } = this.state;
+   
+    let { previewVisible, previewImage, fileList } = this.state;
+    if(this.props.value && fileList.length === 0) {
+      fileList = [{uid: -1,  url: this.props.value}]
+    }
+
+    console.log('%c⧭', 'color: #0088cc', this.props.value);
     const uploadButton = (
       <div>
         <Icon type="plus" />

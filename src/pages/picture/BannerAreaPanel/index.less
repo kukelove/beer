@@ -1,19 +1,5 @@
 .openPage {
   display: flex;
-  .indexPicture {
-    display: flex;
-    flex-direction: column !important;
-    justify-content: center;
-    align-items: center;
-    margin-right: 20px;
-    width: 200px;
-    height: 355px;
-    background-size: 100% 100%;
-    position: relative;
-    img {
-      margin-top: 20px;
-    }
-  }
 }
 .icon {
   color: #fff !important;
@@ -29,14 +15,52 @@
 .bannerArea {
   display: flex;
   flex-wrap:wrap;
-  margin-top: 10px;
+  margin-top: 3px;
 
 }
-.bannerPic {
+.galleryPic {
+  background-repeat: no-repeat !important;
+  background-size: 100% 100% !important;
+  flex-direction: column;
   width: 340px;
   height: 180px;
-  background-size: 100% 100%;
+  background-repeat: no-repeat;
   position: relative;
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background:rgba(238,238,238,1);
+  font-size:14px;
+  font-family:MicrosoftYaHei;
+  font-weight:400;
+  color:rgba(153,153,153,1);
+
+  img {
+    margin-bottom: 10px;
+  }
+}
+.rowTitle {
+  margin-top: 10px;
+  margin-left: 10px;
+  font-size:16px;
+  font-family:PingFang-SC-Regular;
+  font-weight:400;
+  color:rgba(51,51,51,1);
+  font-size: 25px;
+  font-weight: 500;
+}
+
+.bannerRow {
+  margin-top: 10px;
+  border-top: 1px solid rgba(238,238,238,1);
+}
+.modalTitle {
+  text-align: center;
+  font-size:24px;
+  font-family:MicrosoftYaHei;
+  font-weight:400;
+  color:rgba(51,51,51,1);
 }
 .uploadArea {
   background-size: 100% 100%;
@@ -48,10 +72,4 @@
   height: 340px;
   background:rgba(238,238,238,1);
   margin-bottom: 20px;
-}
-.modelArea {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  align-items: center;
 }

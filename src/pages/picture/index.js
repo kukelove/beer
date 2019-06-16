@@ -43,20 +43,20 @@ class Picture extends PureComponent {
   
     return <Page inner>
       <Collapse expandIconPosition="right" bordered={true} defaultActiveKey={['1']}>
-        <Panel header="首页屏轮播图（不超过6张）" key="2">
+        <Panel header="首页屏轮播图（不超过6张）" key="1">
+          <GalleryPanel key="ch"></GalleryPanel>
+        </Panel>
+      </Collapse>
+      <br/>
+      <Collapse expandIconPosition="right" bordered={true} defaultActiveKey={['1']}>
+        <Panel header="首页轮播图（不超过6张）" key="1"> 
           <BannerAreaPanel></BannerAreaPanel>
         </Panel>
       </Collapse>
       <br/>
       <Collapse expandIconPosition="right" bordered={true} defaultActiveKey={['1']}>
-        <Panel header="首页轮播图（不超过6张）" key="2"> 
-        <GalleryPanel key="ch"></GalleryPanel>
-        </Panel>
-      </Collapse>
-      <br/>
-      <Collapse expandIconPosition="right" bordered={true} defaultActiveKey={['1']}>
       <Panel header="页面最新消息" key="1">
-          <MessageList></MessageList>
+          <MessageList location={this.props.location}></MessageList>
         </Panel>
       </Collapse>
       <br/>
